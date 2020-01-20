@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {AuthService} from '../../service/auth/auth.service'
+import {TokenService} from '../../service/token/token.service'
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -14,16 +16,20 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   public error = null;
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService, private token: TokenService) { }
 
   ngOnInit() {
   }
 
   onSubmit() {
-    return this.http.post('http://localhost:8000/api/login', this.form).subscribe(
-      data => console.log(data),
+    this.authService.login(this.form).subscribe(
+      data => this.handleResponse(data),
       error => this.handleError(error)
     )
+  }
+
+  handleResponse(data) {
+    this.token.handle(data.access_token);
   }
 
   handleError(error) {
