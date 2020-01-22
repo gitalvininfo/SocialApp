@@ -32,6 +32,7 @@ class AuthController extends Controller
         }
 
         return $this->respondWithToken($token);
+
     }
 
     public function register(RegisterRequest $request) {

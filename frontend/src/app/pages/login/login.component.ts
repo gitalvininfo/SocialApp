@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {AuthService} from '../../service/auth/auth.service'
-import {TokenService} from '../../service/token/token.service'
+import {TokenService} from '../../service/token/token.service';
+import {CheckAuthService} from '../../service/checkAuth/check-auth.service';
+import {Router} from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -16,7 +18,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   public error = null;
-  constructor(private http: HttpClient, private authService: AuthService, private token: TokenService) { }
+  public success = null;
+  constructor(private http: HttpClient, private authService: AuthService, private token: TokenService, private router: Router, private checkAuth: CheckAuthService) { }
 
   ngOnInit() {
   }
@@ -30,12 +33,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   handleResponse(data) {
     this.token.handle(data.access_token);
+    this.checkAuth.changeAuthStatus(true);
+    this.router.navigateByUrl('/dashboard');
   }
 
   handleError(error) {
     this.error = error.error.error
   }
-
 
 
   ngOnDestroy() {
