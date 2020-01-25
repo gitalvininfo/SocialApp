@@ -4,7 +4,7 @@ import { Location, LocationStrategy, PathLocationStrategy } from '@angular/commo
 import { Router } from '@angular/router';
 import {CheckAuthService} from '../../service/checkAuth/check-auth.service';
 import {TokenService} from '../../service/token/token.service';
-
+import {ProviderService} from '../../service/provider/provider.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,36 +17,31 @@ export class NavbarComponent implements OnInit {
   public focus;
   public listTitles: any[];
   public location: Location;
-  constructor(location: Location,  private element: ElementRef, private router: Router, private checkAuthService: CheckAuthService, private token: TokenService) {
+  public name: any;
+  constructor(location: Location,  private element: ElementRef, private router: Router, private checkAuthService: CheckAuthService, private token: TokenService, private providerService: ProviderService) {
     this.location = location;
   }
-
+ 
   ngOnInit() {
     this.checkAuthService.authStatus.subscribe( value => this.loggedIn = value)
     this.listTitles = ROUTES.filter(listTitle => listTitle);
+    this.getUserInfo();
   }
+
 
     logout() {
     // event.preventDefault();
+    console.log('logout');
     this.token.remove();
     this.checkAuthService.changeAuthStatus(false);
     this.router.navigateByUrl('/login');
   }
 
-
-
-  getTitle(){
-    var titlee = this.location.prepareExternalUrl(this.location.path());
-    if(titlee.charAt(0) === '#'){
-        titlee = titlee.slice( 1 );
-    }
-
-    for(var item = 0; item < this.listTitles.length; item++){
-        if(this.listTitles[item].path === titlee){
-            return this.listTitles[item].title;
-        }
-    }
-    return 'Dashboard';
+  getUserInfo() {
+    this.providerService.getUserInfo(name).then(res => {
+      console.log('res', res);
+      this.name = res.user;
+    })
   }
 
 }

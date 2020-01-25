@@ -39,7 +39,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit() {
     if (this.handleResponse) {
-    console.log('success login')
+    // console.log('success login')  
     }
   }
 

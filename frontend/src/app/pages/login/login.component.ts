@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient, private authService: AuthService, private token: TokenService, private router: Router, private checkAuth: CheckAuthService) { }
 
   ngOnInit() {
+
   }
 
   onSubmit() {
